@@ -8,6 +8,7 @@ export interface Movie {
   popularity?: number;
   runtime?: number;
   genre_ids?: number[];
+  genres: Genre[];
 }
 
 export interface MovieResponse {

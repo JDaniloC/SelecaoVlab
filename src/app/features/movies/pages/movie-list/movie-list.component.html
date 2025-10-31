@@ -1,14 +1,39 @@
 <div class="movie-list-container">
-  <h1 class="page-title">Explorar Filmes</h1>
+  <div class="header">
+    <h1>Buscar Filmes</h1>
+    <p>Encontre filmes para adicionar à sua maratona</p>
+  </div>
 
   <app-movie-filters
     [genres]="(genres$ | async) || []"
     (filterChange)="onFilterChange($event)">
   </app-movie-filters>
 
-  <app-movie-sort
-    (sortChange)="onSortChange($event)">
-  </app-movie-sort>
+  <div class="movies-found">
+    {{ (movies$ | async)?.length }} filmes encontrados
+  </div>
+
+  <div class="content-wrapper">
+    <div class="movie-grid">
+      @for (movie of (movies$ | async); track movie.id) {
+        <app-movie-card [movie]="movie"></app-movie-card>
+      }
+    </div>
+    <div class="marathon-section">
+      <div class="marathon-box">
+        <h2>Minha Maratona</h2>
+        <div class="marathon-details">
+          <span>0 filmes</span>
+          <span>•</span>
+          <span>0h 0min</span>
+        </div>
+        <div class="empty-marathon">
+          <div class="icon-placeholder"></div>
+          <p>Nenhum filme adicionado ainda</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   @if (loading$ | async) {
     <div class="loading-spinner">
@@ -21,12 +46,6 @@
       <p>{{ error }}</p>
     </div>
   }
-
-  <div class="movie-grid">
-    @for (movie of (movies$ | async); track movie.id) {
-      <app-movie-card [movie]="movie"></app-movie-card>
-    }
-  </div>
 
   @if ((movies$ | async)?.length === 0 && !(loading$ | async)) {
     <div class="no-results">

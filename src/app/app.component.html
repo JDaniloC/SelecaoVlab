@@ -1,28 +1,32 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
 <div class="app-container">
-  <header class="app-header">
-    <h1 class="app-title">{{ title }}</h1>
-    <nav class="app-nav">
-      <a routerLink="/movies" routerLinkActive="active" class="nav-link">Movies</a>
+  <aside class="sidebar">
+    <div class="logo">
+      MoviePlan
+    </div>
+    <nav class="menu">
+      <ul>
+        <li class="menu-item">
+          <a routerLink="/movies" routerLinkActive="active">
+            <i class="icon-search"></i>
+            Buscar Filmes
+          </a>
+        </li>
+        <li class="menu-item">
+          <a>
+            <i class="icon-generator"></i>
+            Gerador Temático
+          </a>
+        </li>
+        <li class="menu-item">
+          <a>
+            <i class="icon-marathon"></i>
+            Minhas Maratonas
+          </a>
+        </li>
+      </ul>
     </nav>
-  </header>
-
-  <main class="app-main">
+  </aside>
+  <main class="main-content">
     <router-outlet></router-outlet>
   </main>
 </div>
-
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->

@@ -1,86 +1,42 @@
-.movie-filters {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+.filters-container {
+  display: flex;
+  gap: 20px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.filters-title {
-  color: #fff;
-  font-size: 1.2rem;
-  margin: 0 0 1rem 0;
-  font-weight: 600;
+.search-bar {
+  flex-grow: 1;
 }
 
-.filters-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  align-items: end;
+.search-bar input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.filter-options {
+  display: flex;
+  gap: 20px;
 }
 
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-
-  label {
-    color: #ccc;
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
 }
 
-.filter-input,
-.filter-select {
-  padding: 0.75rem;
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-
-  &:focus {
-    outline: none;
-    border-color: #ff6b6b;
-    background: rgba(255, 255, 255, 0.15);
-  }
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-  }
+.filter-group label {
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #555;
 }
 
-.filter-select {
-  cursor: pointer;
-
-  option {
-    background: #1a1a1a;
-    color: #fff;
-  }
-}
-
-.clear-button {
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: transparent;
-  color: #fff;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  height: fit-content;
-
-  &:hover {
-    background: rgba(255, 107, 107, 0.2);
-    border-color: #ff6b6b;
-    color: #ff6b6b;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .filters-form {
-    grid-template-columns: 1fr;
-  }
+.filter-group select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
 }

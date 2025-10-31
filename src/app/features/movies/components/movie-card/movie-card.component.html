@@ -1,14 +1,19 @@
 @if (movie) {
   <div class="movie-card">
-    <img [src]="getPosterUrl(movie.poster_path)" [alt]="movie.title" class="movie-poster">
+    <div class="movie-poster">
+      <img [src]="getPosterUrl(movie.poster_path)" [alt]="movie.title">
+      <div class="movie-rating">⭐ {{ movie.vote_average | number:'1.1-1' }}</div>
+    </div>
     <div class="movie-info">
       <h3 class="movie-title">{{ movie.title }}</h3>
-      <p class="movie-genres">{{ getMovieGenres() }}</p>
-      <p class="movie-overview">{{ movie.overview }}</p>
-      <div class="movie-details">
-        <span class="movie-release-date">{{ movie.release_date | date:'yyyy' }}</span>
-        <span class="movie-rating">⭐ {{ movie.vote_average | number:'1.1-1' }}</span>
+      <div class="movie-genres">
+        <span *ngFor="let genre of movie.genres" class="genre-tag">{{ genre.name }}</span>
       </div>
+      <div class="movie-details">
+        <span class="movie-year">{{ movie.release_date | date:'yyyy' }}</span>
+        <span class="movie-duration">{{ movie.runtime }} min</span>
+      </div>
+      <button class="add-button">+ Adicionar</button>
     </div>
   </div>
 }

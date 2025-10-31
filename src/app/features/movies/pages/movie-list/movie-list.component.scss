@@ -1,24 +1,75 @@
 .movie-list-container {
-  padding: 2rem;
-  background: #141414;
-  min-height: 100vh;
-  color: #fff;
-  width: 95vw;
+  padding: 20px;
 }
 
-.page-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin: 0 0 2rem 0;
-  color: #fff;
-  text-align: center;
+.header {
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.header p {
+  margin: 0;
+  color: #555;
+}
+
+.movies-found {
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 20px;
 }
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  flex-grow: 1;
+}
+
+.marathon-section {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.marathon-box {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.marathon-box h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.marathon-details {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.empty-marathon .icon-placeholder {
+  width: 50px;
+  height: 50px;
+  background-color: #eee;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+}
+
+.empty-marathon p {
+  margin: 0;
+  color: #888;
 }
 
 .loading-spinner,
@@ -32,20 +83,4 @@
 
 .error-message {
   color: #ff6b6b;
-}
-
-@media screen and (max-width: 768px) {
-  .movie-list-container {
-    padding: 1rem;
-    width: 100vw;
-  }
-
-  .page-title {
-    font-size: 1.5rem;
-  }
-
-  .movie-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
-  }
 }

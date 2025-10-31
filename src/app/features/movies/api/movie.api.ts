@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MovieResponse, Genre, MovieFilters, SortBy } from '../types/movie.type';
+import { MovieResponse, Genre, MovieFilters, SortBy, Movie } from '../types/movie.type';
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +39,9 @@ export class MovieApiService {
 
   getGenres(): Observable<{ genres: Genre[] }> {
     return this.http.get<{ genres: Genre[] }>(`${this.apiUrl}/genre/movie/list?api_key=${this.apiKey}`);
+  }
+
+  getMovieDetails(id: number): Observable<Movie> {
+    return this.http.get<Movie>(`${this.apiUrl}/movie/${id}?api_key=${this.apiKey}`);
   }
 }
