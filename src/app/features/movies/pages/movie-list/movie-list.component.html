@@ -4,13 +4,24 @@
     <p>Encontre filmes para adicionar à sua maratona</p>
   </div>
 
+  <app-filmography-search
+    [loading]="(loading$ | async) ?? false"
+    [selectedPersonName]="(selectedPerson$ | async)?.name ?? null"
+    (search)="onFilmographySearch($event)"
+    (clear)="onFilmographyClear()"
+  ></app-filmography-search>
+
   <app-movie-filters
     [genres]="(genres$ | async) || []"
     (filterChange)="onFilterChange($event)">
   </app-movie-filters>
 
   <div class="movies-found">
-    {{ (movies$ | async)?.length }} filmes encontrados
+    @if (selectedPerson$ | async; as person) {
+      {{ (movies$ | async)?.length }} filmes encontrados na filmografia de <strong>{{ person.name }}</strong>
+    } @else {
+      {{ (movies$ | async)?.length }} filmes encontrados
+    }
   </div>
 
   <div class="content-wrapper">
@@ -38,7 +49,11 @@
 
   @if ((movies$ | async)?.length === 0 && !(loading$ | async)) {
     <div class="no-results">
-      <p>Nenhum filme encontrado. Tente ajustar os filtros.</p>
+      @if (selectedPerson$ | async; as person) {
+        <p>Nenhum filme encontrado na filmografia de {{ person.name }}.</p>
+      } @else {
+        <p>Nenhum filme encontrado. Tente ajustar os filtros.</p>
+      }
     </div>
   }
 </div>

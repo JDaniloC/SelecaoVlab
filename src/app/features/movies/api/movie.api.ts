@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MovieResponse, Genre, MovieFilters, SortBy, Movie } from '../types/movie.type';
+import { MovieResponse, Genre, MovieFilters, SortBy, Movie, PersonSearchResponse, PersonMovieCreditsResponse } from '../types/movie.type';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,13 @@ export class MovieApiService {
   }
 
   searchMovies(query: string, page = 1): Observable<MovieResponse> {
-    return this.http.get<MovieResponse>(`${this.apiUrl}/search/movie?api_key=${this.apiKey}&query=${query}&page=${page}`);
+    const encodedQuery = encodeURIComponent(query);
+    return this.http.get<MovieResponse>(`${this.apiUrl}/search/movie?api_key=${this.apiKey}&query=${encodedQuery}&page=${page}`);
+  }
+
+  searchPerson(query: string, page = 1): Observable<PersonSearchResponse> {
+    const encodedQuery = encodeURIComponent(query);
+    return this.http.get<PersonSearchResponse>(`${this.apiUrl}/search/person?api_key=${this.apiKey}&query=${encodedQuery}&page=${page}`);
   }
 
   discoverMovies(filters: MovieFilters, sortBy?: SortBy, page = 1): Observable<MovieResponse> {
@@ -43,5 +49,9 @@ export class MovieApiService {
 
   getMovieDetails(id: number): Observable<Movie> {
     return this.http.get<Movie>(`${this.apiUrl}/movie/${id}?api_key=${this.apiKey}`);
+  }
+
+  getPersonMovieCredits(personId: number): Observable<PersonMovieCreditsResponse> {
+    return this.http.get<PersonMovieCreditsResponse>(`${this.apiUrl}/person/${personId}/movie_credits?api_key=${this.apiKey}`);
   }
 }

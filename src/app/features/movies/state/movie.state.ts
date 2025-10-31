@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Movie, Genre, MovieFilters, SortBy } from '../types/movie.type';
+import { Movie, Genre, MovieFilters, SortBy, Person } from '../types/movie.type';
 
 export interface MovieState {
   movies: Movie[];
@@ -12,6 +12,7 @@ export interface MovieState {
   filters: MovieFilters;
   sortBy: SortBy | null;
   marathonMovies: Movie[];
+  selectedPerson: Person | null;
   _internal?: unknown;
 }
 
@@ -25,6 +26,7 @@ const initialState: MovieState = {
   filters: {},
   sortBy: null,
   marathonMovies: [],
+  selectedPerson: null,
   _internal: undefined
 };
 
@@ -70,6 +72,10 @@ export class MovieStateService {
 
   setSortBy(sortBy: SortBy | null) {
     this.setState({ sortBy });
+  }
+
+  setSelectedPerson(selectedPerson: Person | null) {
+    this.setState({ selectedPerson });
   }
 
   addToMarathon(movie: Movie) {

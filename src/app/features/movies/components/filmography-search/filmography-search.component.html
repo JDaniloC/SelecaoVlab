@@ -1,0 +1,28 @@
+<form class="filmography-search" (ngSubmit)="onSubmit()" data-testid="filmography-form">
+  <div class="input-wrapper">
+    <input
+      type="text"
+      placeholder="Digite o nome de um diretor, ator ou profissional..."
+      [formControl]="searchControl"
+    />
+    <button type="submit" [disabled]="loading || !searchControl.value?.trim()">
+      Buscar filmografia
+    </button>
+  </div>
+
+  @if (selectedPersonName) {
+    <div class="active-filmography">
+      <span>
+        Exibindo filmografia de <strong>{{ selectedPersonName }}</strong>
+      </span>
+      <button
+        type="button"
+        class="clear-button"
+        (click)="onClear()"
+        [disabled]="loading"
+      >
+        Limpar
+      </button>
+    </div>
+  }
+</form>

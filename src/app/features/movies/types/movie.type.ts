@@ -38,3 +38,32 @@ export type SortBy =
   | 'title.desc'
   | 'popularity.asc'
   | 'popularity.desc';
+
+export interface Person {
+  id: number;
+  name: string;
+  known_for_department?: string;
+  profile_path?: string | null;
+}
+
+export interface PersonSearchResponse {
+  page: number;
+  results: Person[];
+  total_pages: number;
+  total_results: number;
+}
+
+export interface PersonMovieCredit {
+  id: number;
+  title: string;
+  release_date?: string;
+  popularity?: number;
+  poster_path?: string | null;
+  character?: string;
+  job?: string;
+}
+
+export interface PersonMovieCreditsResponse {
+  cast: PersonMovieCredit[];
+  crew: PersonMovieCredit[];
+}
