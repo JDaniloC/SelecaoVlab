@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Movie } from '../../types/movie.type';
 import { CommonModule } from '@angular/common';
 

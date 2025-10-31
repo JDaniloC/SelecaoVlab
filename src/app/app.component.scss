@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+// Font import removed to avoid external dependency issues during build
+// Using system fonts instead
 
 :host {
   --bright-blue: oklch(51.01% 0.274 263.83);

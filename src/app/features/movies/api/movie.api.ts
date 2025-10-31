@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MovieResponse } from '../types/movie.type';
 
@@ -12,10 +13,10 @@ export class MovieApiService {
 
   getPopularMovies(page = 1): Observable<MovieResponse> {
     console.log(this.apiKey)
-    return this.http.gt<MovieResponse>(`${this.apiUrl}/movie/popular?api_key=${this.apiKey}&page=${page}`);
+    return this.http.get<MovieResponse>(`${this.apiUrl}/movie/popular?api_key=${this.apiKey}&page=${page}`);
   }
 
   searchMovies(query: string, page = 1): Observable<MovieResponse> {
-    return this.http.gt<MovieResponse>(`${this.apiUrl}/search/movie?api_key=${this.apiKey}&query=${query}&page=${page}`);
+    return this.http.get<MovieResponse>(`${this.apiUrl}/search/movie?api_key=${this.apiKey}&query=${query}&page=${page}`);
   }
 }
