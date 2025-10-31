@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { MovieApiService } from '../api/movie.api';
 import { MovieStateService } from '../state/movie.state';
-import { tap, catchError, switchMap } from 'rxjs/operators';
+import { tap, catchError, switchMap, map } from 'rxjs/operators';
 import { of, forkJoin } from 'rxjs';
 import { MovieFilters, SortBy, Movie, MovieResponse } from '../types/movie.type';
 
@@ -13,6 +13,14 @@ export class MovieFacade {
   private state = inject(MovieStateService);
 
   movies$ = this.state.movies$;
+
+  marathonMovies$ = this.state.movies$.pipe(
+    map(state => state.marathonMovies)
+  );
+
+  marathonDuration$ = this.state.movies$.pipe(
+    map(() => this.state.getMarathonDuration())
+  );
 
   loadPopularMovies(page = 1) {
     this.state.setLoading(true);
@@ -105,5 +113,21 @@ export class MovieFacade {
   sortMovies(sortBy: SortBy, page = 1) {
     const currentFilters = this.state.getState().filters;
     this.filterMovies(currentFilters, sortBy, page);
+  }
+
+  addToMarathon(movie: Movie) {
+    this.state.addToMarathon(movie);
+  }
+
+  removeFromMarathon(movieId: number) {
+    this.state.removeFromMarathon(movieId);
+  }
+
+  clearMarathon() {
+    this.state.clearMarathon();
+  }
+
+  isInMarathon(movieId: number): boolean {
+    return this.state.getState().marathonMovies.some(m => m.id === movieId);
   }
 }

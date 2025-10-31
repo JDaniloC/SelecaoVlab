@@ -44,8 +44,24 @@ describe('MovieFacade', () => {
       setFilters: jest.fn(),
       setSortBy: jest.fn(),
       setGenres: jest.fn(),
-      getState: jest.fn().mockReturnValue({ filters: {} }),
-      movies$: of([]),
+      addToMarathon: jest.fn(),
+      removeFromMarathon: jest.fn(),
+      clearMarathon: jest.fn(),
+      getState: jest.fn().mockReturnValue({ 
+        filters: {},
+        marathonMovies: []
+      }),
+      movies$: of({
+        movies: [],
+        genres: [],
+        loading: false,
+        error: null,
+        page: 1,
+        totalPages: 1,
+        filters: {},
+        sortBy: null,
+        marathonMovies: []
+      }),
     };
 
     TestBed.configureTestingModule({
@@ -208,6 +224,41 @@ describe('MovieFacade', () => {
         expect(apiService.discoverMovies).toHaveBeenCalledWith(filters, sortBy, 1);
         done();
       }, 100);
+    });
+  });
+
+  describe('Marathon functionality', () => {
+    it('should add movie to marathon', () => {
+      facade.addToMarathon(mockMovie);
+      expect(stateService.addToMarathon).toHaveBeenCalledWith(mockMovie);
+    });
+
+    it('should remove movie from marathon', () => {
+      facade.removeFromMarathon(1);
+      expect(stateService.removeFromMarathon).toHaveBeenCalledWith(1);
+    });
+
+    it('should clear marathon', () => {
+      facade.clearMarathon();
+      expect(stateService.clearMarathon).toHaveBeenCalled();
+    });
+
+    it('should check if movie is in marathon', () => {
+      stateService.getState = jest.fn().mockReturnValue({
+        marathonMovies: [mockMovie]
+      });
+
+      const result = facade.isInMarathon(1);
+      expect(result).toBe(true);
+    });
+
+    it('should return false if movie is not in marathon', () => {
+      stateService.getState = jest.fn().mockReturnValue({
+        marathonMovies: []
+      });
+
+      const result = facade.isInMarathon(1);
+      expect(result).toBe(false);
     });
   });
 });
