@@ -1,0 +1,14 @@
+<div class="movie-sort">
+  <label for="sort">Ordenar por:</label>
+  <select
+    id="sort"
+    [(ngModel)]="selectedSort"
+    (ngModelChange)="onSortChange($event)"
+    class="sort-select"
+  >
+    <option value="">Padrão</option>
+    <option *ngFor="let option of sortOptions" [value]="option.value">
+      {{ option.label }}
+    </option>
+  </select>
+</div>

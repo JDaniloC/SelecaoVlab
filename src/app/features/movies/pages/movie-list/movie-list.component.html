@@ -1,28 +1,36 @@
 <div class="movie-list-container">
-  <app-carousel
-    [title]="'Popular Movies'"
-    [items]="popularMovies"
-    [isExplore]="false"
-    [exploreLink]="'/movies/popular'"
-    [canNavigateLeft]="true"
-    [canNavigateRight]="true">
-  </app-carousel>
+  <h1 class="page-title">Explorar Filmes</h1>
 
-  <app-carousel
-    [title]="'Top Rated Movies'"
-    [items]="topRatedMovies"
-    [isExplore]="false"
-    [exploreLink]="'/movies/top-rated'"
-    [canNavigateLeft]="true"
-    [canNavigateRight]="true">
-  </app-carousel>
+  <app-movie-filters
+    [genres]="(genres$ | async) || []"
+    (filterChange)="onFilterChange($event)">
+  </app-movie-filters>
 
-  <app-carousel
-    [title]="'Upcoming Movies'"
-    [items]="upcomingMovies"
-    [isExplore]="false"
-    [exploreLink]="'/movies/upcoming'"
-    [canNavigateLeft]="true"
-    [canNavigateRight]="true">
-  </app-carousel>
+  <app-movie-sort
+    (sortChange)="onSortChange($event)">
+  </app-movie-sort>
+
+  @if (loading$ | async) {
+    <div class="loading-spinner">
+      <p>Carregando filmes...</p>
+    </div>
+  }
+
+  @if (error$ | async; as error) {
+    <div class="error-message">
+      <p>{{ error }}</p>
+    </div>
+  }
+
+  <div class="movie-grid">
+    @for (movie of (movies$ | async); track movie.id) {
+      <app-movie-card [movie]="movie"></app-movie-card>
+    }
+  </div>
+
+  @if ((movies$ | async)?.length === 0 && !(loading$ | async)) {
+    <div class="no-results">
+      <p>Nenhum filme encontrado. Tente ajustar os filtros.</p>
+    </div>
+  }
 </div>

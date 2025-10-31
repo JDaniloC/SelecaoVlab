@@ -1,22 +1,28 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Movie } from '../types/movie.type';
+import { Movie, Genre, MovieFilters, SortBy } from '../types/movie.type';
 
 export interface MovieState {
   movies: Movie[];
+  genres: Genre[];
   loading: boolean;
   error: string | null;
   page: number;
   totalPages: number;
+  filters: MovieFilters;
+  sortBy: SortBy | null;
   _internal?: unknown;
 }
 
 const initialState: MovieState = {
   movies: [],
+  genres: [],
   loading: false,
   error: null,
   page: 1,
   totalPages: 1,
+  filters: {},
+  sortBy: null,
   _internal: undefined
 };
 
@@ -40,6 +46,10 @@ export class MovieStateService {
     this.setState({ movies });
   }
 
+  setGenres(genres: Genre[]) {
+    this.setState({ genres });
+  }
+
   setLoading(loading: boolean) {
     this.setState({ loading });
   }
@@ -50,5 +60,13 @@ export class MovieStateService {
 
   setPagination(page: number, totalPages: number) {
     this.setState({ page, totalPages });
+  }
+
+  setFilters(filters: MovieFilters) {
+    this.setState({ filters });
+  }
+
+  setSortBy(sortBy: SortBy | null) {
+    this.setState({ sortBy });
   }
 }

@@ -5,6 +5,9 @@ export interface Movie {
   overview: string;
   release_date: string;
   vote_average: number;
+  popularity?: number;
+  runtime?: number;
+  genre_ids?: number[];
 }
 
 export interface MovieResponse {
@@ -13,3 +16,24 @@ export interface MovieResponse {
   total_pages: number;
   total_results: number;
 }
+
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface MovieFilters {
+  name?: string;
+  genreId?: number;
+  year?: number;
+}
+
+export type SortBy =
+  | 'release_date.asc'
+  | 'release_date.desc'
+  | 'vote_average.asc'
+  | 'vote_average.desc'
+  | 'title.asc'
+  | 'title.desc'
+  | 'popularity.asc'
+  | 'popularity.desc';

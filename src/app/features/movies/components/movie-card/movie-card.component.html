@@ -3,10 +3,11 @@
     <img [src]="getPosterUrl(movie.poster_path)" [alt]="movie.title" class="movie-poster">
     <div class="movie-info">
       <h3 class="movie-title">{{ movie.title }}</h3>
+      <p class="movie-genres">{{ getMovieGenres() }}</p>
       <p class="movie-overview">{{ movie.overview }}</p>
       <div class="movie-details">
-        <span class="movie-release-date">Release: {{ movie.release_date | date:'longDate' }}</span>
-        <span class="movie-rating">Rating: {{ movie.vote_average }}</span>
+        <span class="movie-release-date">{{ movie.release_date | date:'yyyy' }}</span>
+        <span class="movie-rating">⭐ {{ movie.vote_average | number:'1.1-1' }}</span>
       </div>
     </div>
   </div>

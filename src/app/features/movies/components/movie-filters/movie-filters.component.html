@@ -1,0 +1,51 @@
+<div class="movie-filters">
+  <h3 class="filters-title">Filtros</h3>
+
+  <form [formGroup]="filterForm" class="filters-form">
+    <div class="filter-group">
+      <label for="name">Nome do Filme</label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        placeholder="Buscar por nome..."
+        class="filter-input"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="genre">Gênero</label>
+      <select
+        id="genre"
+        formControlName="genreId"
+        class="filter-select"
+      >
+        <option [value]="null">Todos os gêneros</option>
+        <option *ngFor="let genre of genres" [value]="genre.id">
+          {{ genre.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="year">Ano de Lançamento</label>
+      <input
+        id="year"
+        type="number"
+        formControlName="year"
+        placeholder="Ex: 2024"
+        min="1900"
+        max="2100"
+        class="filter-input"
+      />
+    </div>
+
+    <button
+      type="button"
+      (click)="clearFilters()"
+      class="clear-button"
+    >
+      Limpar Filtros
+    </button>
+  </form>
+</div>
