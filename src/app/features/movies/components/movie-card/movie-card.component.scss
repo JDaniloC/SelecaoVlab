@@ -63,9 +63,25 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
-}
+  transition: all 0.3s ease;
+  font-weight: 600;
 
-.add-button:hover {
-  background-color: #2980b9;
+  &:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &.added {
+    background-color: #27ae60;
+    
+    &:hover {
+      background-color: #229954;
+      box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+    }
+  }
 }

@@ -13,7 +13,14 @@
         <span class="movie-year">{{ movie.release_date | date:'yyyy' }}</span>
         <span class="movie-duration">{{ movie.runtime }} min</span>
       </div>
-      <button class="add-button">+ Adicionar</button>
+      <button 
+        class="add-button" 
+        [class.added]="isInMarathon"
+        (click)="toggleMarathon()"
+        [attr.aria-label]="isInMarathon ? 'Remover da maratona' : 'Adicionar à maratona'"
+      >
+        {{ isInMarathon ? '✓ Adicionado' : '+ Adicionar' }}
+      </button>
     </div>
   </div>
 }

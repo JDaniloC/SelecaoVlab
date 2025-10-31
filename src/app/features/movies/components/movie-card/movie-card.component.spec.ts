@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/angular';
 import { MovieCardComponent } from './movie-card.component';
 import { Movie } from '../../types/movie.type';
 import { MovieStateService } from '../../state/movie.state';
+import { MovieFacade } from '../../services/movie.facade';
 import { of } from 'rxjs';
 
 describe('MovieCardComponent', () => {
@@ -17,8 +18,18 @@ describe('MovieCardComponent', () => {
   };
 
   const mockStateService = {
-    movies$: of([]),
-    getState: jest.fn(),
+    movies$: of({
+      movies: [],
+      genres: [],
+      loading: false,
+      error: null,
+      page: 1,
+      totalPages: 1,
+      filters: {},
+      sortBy: null,
+      marathonMovies: []
+    }),
+    getState: jest.fn().mockReturnValue({ marathonMovies: [] }),
     setState: jest.fn(),
     setMovies: jest.fn(),
     setGenres: jest.fn(),
@@ -29,11 +40,29 @@ describe('MovieCardComponent', () => {
     setSortBy: jest.fn(),
   };
 
+  const mockFacade = {
+    movies$: of({
+      movies: [],
+      genres: [],
+      loading: false,
+      error: null,
+      page: 1,
+      totalPages: 1,
+      filters: {},
+      sortBy: null,
+      marathonMovies: []
+    }),
+    isInMarathon: jest.fn().mockReturnValue(false),
+    addToMarathon: jest.fn(),
+    removeFromMarathon: jest.fn(),
+  };
+
   it('should create', async () => {
     await render(MovieCardComponent, {
       componentInputs: { movie: mockMovie },
       providers: [
-        { provide: MovieStateService, useValue: mockStateService }
+        { provide: MovieStateService, useValue: mockStateService },
+        { provide: MovieFacade, useValue: mockFacade }
       ],
     });
 
@@ -44,7 +73,8 @@ describe('MovieCardComponent', () => {
     await render(MovieCardComponent, {
       componentInputs: { movie: mockMovie },
       providers: [
-        { provide: MovieStateService, useValue: mockStateService }
+        { provide: MovieStateService, useValue: mockStateService },
+        { provide: MovieFacade, useValue: mockFacade }
       ],
     });
 
@@ -57,7 +87,8 @@ describe('MovieCardComponent', () => {
     const { fixture } = await render(MovieCardComponent, {
       componentInputs: { movie: mockMovie },
       providers: [
-        { provide: MovieStateService, useValue: mockStateService }
+        { provide: MovieStateService, useValue: mockStateService },
+        { provide: MovieFacade, useValue: mockFacade }
       ],
     });
 
@@ -70,7 +101,8 @@ describe('MovieCardComponent', () => {
     const { fixture } = await render(MovieCardComponent, {
       componentInputs: { movie: mockMovie },
       providers: [
-        { provide: MovieStateService, useValue: mockStateService }
+        { provide: MovieStateService, useValue: mockStateService },
+        { provide: MovieFacade, useValue: mockFacade }
       ],
     });
 
@@ -83,11 +115,66 @@ describe('MovieCardComponent', () => {
     const { fixture } = await render(MovieCardComponent, {
       componentInputs: { movie: mockMovie },
       providers: [
-        { provide: MovieStateService, useValue: mockStateService }
+        { provide: MovieStateService, useValue: mockStateService },
+        { provide: MovieFacade, useValue: mockFacade }
       ],
     });
 
     const component = fixture.componentInstance;
     expect(component.movie).toEqual(mockMovie);
+  });
+
+  it('should toggle marathon on button click', async () => {
+    const { fixture } = await render(MovieCardComponent, {
+      componentInputs: { movie: mockMovie },
+      providers: [
+        { provide: MovieStateService, useValue: mockStateService },
+        { provide: MovieFacade, useValue: mockFacade }
+      ],
+    });
+
+    const component = fixture.componentInstance;
+    component.toggleMarathon();
+    
+    expect(mockFacade.addToMarathon).toHaveBeenCalledWith(mockMovie);
+  });
+
+  it('should show "Adicionado" when movie is in marathon', async () => {
+    const facadeWithMovie = {
+      ...mockFacade,
+      isInMarathon: jest.fn().mockReturnValue(true)
+    };
+
+    const { fixture } = await render(MovieCardComponent, {
+      componentInputs: { movie: mockMovie },
+      providers: [
+        { provide: MovieStateService, useValue: mockStateService },
+        { provide: MovieFacade, useValue: facadeWithMovie }
+      ],
+    });
+
+    const component = fixture.componentInstance;
+    expect(component.isInMarathon).toBe(true);
+  });
+
+  it('should remove from marathon when already added', async () => {
+    const facadeWithMovie = {
+      ...mockFacade,
+      isInMarathon: jest.fn().mockReturnValue(true)
+    };
+
+    const { fixture } = await render(MovieCardComponent, {
+      componentInputs: { movie: mockMovie },
+      providers: [
+        { provide: MovieStateService, useValue: mockStateService },
+        { provide: MovieFacade, useValue: facadeWithMovie }
+      ],
+    });
+
+    const component = fixture.componentInstance;
+    component.isInMarathon = true;
+    component.toggleMarathon();
+    
+    expect(facadeWithMovie.removeFromMarathon).toHaveBeenCalledWith(mockMovie.id);
   });
 });
