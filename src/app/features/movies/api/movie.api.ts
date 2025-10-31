@@ -12,7 +12,6 @@ export class MovieApiService {
   private readonly apiUrl = 'https://api.themoviedb.org/3';
 
   getPopularMovies(page = 1): Observable<MovieResponse> {
-    console.log(this.apiKey)
     return this.http.get<MovieResponse>(`${this.apiUrl}/movie/popular?api_key=${this.apiKey}&page=${page}`);
   }
 
