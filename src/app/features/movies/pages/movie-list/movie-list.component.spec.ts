@@ -62,6 +62,10 @@ describe('MovieListComponent', () => {
     filterMovies: jest.fn(),
     sortMovies: jest.fn(),
     searchMovies: jest.fn(),
+    isInMarathon: jest.fn().mockReturnValue(false),
+    addToMarathon: jest.fn(),
+    removeFromMarathon: jest.fn(),
+    clearMarathon: jest.fn(),
   };
 
   beforeEach(() => {
@@ -222,8 +226,7 @@ describe('MovieListComponent', () => {
       providers: [{ provide: MovieFacade, useValue: mockFacade }],
     });
 
-    expect(screen.getByText('Minha Maratona')).toBeTruthy();
-    expect(screen.getByText('Nenhum filme adicionado ainda')).toBeTruthy();
+    expect(screen.getByText('🎬 Lista de Maratona')).toBeTruthy();
   });
 
   // TODO: Testes futuros para funcionalidade de maratona (quando implementada)

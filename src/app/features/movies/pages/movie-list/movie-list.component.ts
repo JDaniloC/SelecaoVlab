@@ -4,6 +4,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { MovieCardComponent } from '../../components/movie-card/movie-card.component';
 import { MovieFiltersComponent } from '../../components/movie-filters/movie-filters.component';
 import { MovieSortComponent } from '../../components/movie-sort/movie-sort.component';
+import { MarathonListComponent } from '../../components/marathon-list/marathon-list.component';
 import { MovieFilters, SortBy } from '../../types/movie.type';
 import { map } from 'rxjs/operators';
 
@@ -12,7 +13,7 @@ import { map } from 'rxjs/operators';
   templateUrl: './movie-list.component.html',
   styleUrls: ['./movie-list.component.scss'],
   standalone: true,
-  imports: [CommonModule, AsyncPipe, MovieCardComponent, MovieFiltersComponent, MovieSortComponent]
+  imports: [CommonModule, AsyncPipe, MovieCardComponent, MovieFiltersComponent, MovieSortComponent, MarathonListComponent]
 })
 export class MovieListComponent implements OnInit {
   facade = inject(MovieFacade);
