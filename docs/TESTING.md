@@ -9,6 +9,38 @@ O projeto utiliza duas ferramentas principais para testes:
 - **Jest + Testing Library**: Para testes unitários e de integração
 - **Cypress**: Para testes End-to-End (E2E)
 
+## Status de Cobertura de Testes
+
+### Testes Implementados ✅
+
+#### Testes Unitários (Jest)
+- ✅ **MovieApiService**: Testes completos para busca de filmes, paginação, filtros e tratamento de erros
+- ✅ **MovieStateService**: Testes para gerenciamento de estado, atualização de filmes, gêneros, loading e erros
+- ✅ **MovieFacade**: Testes para orquestração entre API e State, incluindo cenários de sucesso e falha
+- ✅ **MovieCardComponent**: Testes de renderização e exibição de informações do filme
+- ✅ **MovieListComponent**: Testes de listagem, filtros, ordenação e estados de loading/erro
+
+#### Testes E2E (Cypress)
+- ✅ **Carregamento e exibição da página**: Verificação de elementos principais
+- ✅ **Busca de filmes**: Testes de busca por nome
+- ✅ **Filtros**: Testes de filtros por gênero e ano
+- ✅ **Ordenação**: Testes de ordenação por diferentes critérios
+- ✅ **Tratamento de erros**: Testes de API failures e timeouts
+- ✅ **Design responsivo**: Testes em diferentes viewports
+- ✅ **Acessibilidade**: Testes básicos de a11y
+
+### Funcionalidades Pendentes de Teste 🚧
+
+> **Nota**: A funcionalidade de maratona (adicionar/remover filmes, calcular duração total) está planejada mas ainda não foi implementada. Os testes para essa funcionalidade estão documentados nos arquivos de teste como TODOs e devem ser descomentados e implementados quando a funcionalidade for adicionada.
+
+#### Testes a Implementar Quando a Funcionalidade Estiver Pronta:
+- ⏳ Adicionar filme à maratona
+- ⏳ Remover filme da maratona
+- ⏳ Calcular e exibir duração total da maratona
+- ⏳ Atualizar contador de filmes na maratona
+- ⏳ Persistir maratona no localStorage
+- ⏳ Limpar todos os filmes da maratona
+
 ## Testes Unitários (Jest)
 
 ### Executar testes
@@ -121,7 +153,17 @@ describe('MovieFacade', () => {
 
 O relatório de cobertura é gerado na pasta `coverage/`. Você pode visualizar o relatório HTML abrindo `coverage/lcov-report/index.html` no navegador.
 
-Meta de cobertura: **80% ou mais**
+**Metas de cobertura configuradas**: 70% para branches, functions, lines e statements.
+
+Para abrir o relatório de cobertura após executar os testes:
+
+```bash
+# No Linux/Mac
+npm run test:coverage && open coverage/lcov-report/index.html
+
+# No Windows
+npm run test:coverage && start coverage/lcov-report/index.html
+```
 
 ## Testes E2E (Cypress)
 
@@ -223,12 +265,10 @@ cy.login('user@example.com', 'password123');
 
 ## Executando Testes no CI/CD
 
-Os testes são executados automaticamente no GitHub Actions quando você:
+Os testes são executados automaticamente quando você:
 
 - Faz push para `main` ou `develop`
 - Abre um Pull Request
-
-O workflow está configurado em `.github/workflows/tests.yml`.
 
 ## Estrutura de Arquivos de Teste
 
@@ -239,20 +279,24 @@ src/
 │   │   └── movies/
 │   │       ├── api/
 │   │       │   ├── movie.api.ts
-│   │       │   └── movie.api.spec.ts          # Teste do serviço de API
+│   │       │   └── movie.api.spec.ts          # ✅ Teste do serviço de API
 │   │       ├── components/
 │   │       │   └── movie-card/
 │   │       │       ├── movie-card.component.ts
-│   │       │       └── movie-card.component.spec.ts  # Teste do componente
+│   │       │       └── movie-card.component.spec.ts  # ✅ Teste do componente
+│   │       ├── pages/
+│   │       │   └── movie-list/
+│   │       │       ├── movie-list.component.ts
+│   │       │       └── movie-list.component.spec.ts  # ✅ Teste da página
 │   │       ├── services/
 │   │       │   ├── movie.facade.ts
-│   │       │   └── movie.facade.spec.ts       # Teste da facade
+│   │       │   └── movie.facade.spec.ts       # ✅ Teste da facade
 │   │       └── state/
 │   │           ├── movie.state.ts
-│   │           └── movie.state.spec.ts        # Teste do state service
+│   │           └── movie.state.spec.ts        # ✅ Teste do state service
 cypress/
 ├── e2e/
-│   └── movies.cy.ts                           # Testes E2E
+│   └── movies.cy.ts                           # ✅ Testes E2E
 ├── support/
 │   ├── commands.ts                            # Comandos customizados
 │   └── e2e.ts                                 # Configuração E2E
@@ -273,6 +317,9 @@ npm test -- --testNamePattern="should load movies"
 
 # Modo verbose para mais informações
 npm test -- --verbose
+
+# Limpar cache do Jest
+npm test -- --clearCache
 ```
 
 ### Cypress
@@ -284,12 +331,33 @@ O Cypress fornece ferramentas visuais de debug:
 3. Use o seletor de tempo (time-travel) para ver cada passo
 4. Inspecione elementos e estado da aplicação
 
+## Roadmap de Testes
+
+### Próximas Implementações (quando a funcionalidade de maratona estiver pronta)
+
+1. **Testes de Integração para Maratona**
+   - Service para gerenciar filmes da maratona
+   - Cálculo de duração total
+   - Persistência em localStorage
+
+2. **Testes de Componente**
+   - Botão de adicionar/remover filme
+   - Lista de filmes na maratona
+   - Exibição de duração total
+
+3. **Testes E2E**
+   - Fluxo completo de adicionar filme
+   - Persistência após reload
+   - Remoção de filmes
+   - Limpeza da maratona
+
 ## Recursos Adicionais
 
 - [Jest Documentation](https://jestjs.io/docs/getting-started)
 - [Testing Library Angular](https://testing-library.com/docs/angular-testing-library/intro)
 - [Cypress Documentation](https://docs.cypress.io)
 - [Angular Testing Guide](https://angular.io/guide/testing)
+- [Jest Preset Angular](https://github.com/thymikee/jest-preset-angular)
 
 ## Suporte
 
@@ -299,3 +367,20 @@ Se encontrar problemas com os testes:
 2. Limpe o cache do Jest: `npm test -- --clearCache`
 3. Verifique os logs de erro para mais detalhes
 4. Consulte a documentação das ferramentas acima
+
+## Contribuindo com Testes
+
+Ao adicionar novas funcionalidades, sempre inclua testes:
+
+1. **Testes Unitários**: Para serviços, facades e lógica de negócio
+2. **Testes de Componente**: Para componentes Angular
+3. **Testes E2E**: Para fluxos críticos do usuário
+
+### Checklist para Pull Requests
+
+- [ ] Testes unitários para nova funcionalidade
+- [ ] Testes de componente (se aplicável)
+- [ ] Testes E2E para fluxos do usuário (se aplicável)
+- [ ] Cobertura de código acima de 70%
+- [ ] Todos os testes passando localmente
+- [ ] Documentação de testes atualizada

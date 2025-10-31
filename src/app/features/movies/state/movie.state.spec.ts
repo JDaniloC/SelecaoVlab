@@ -41,7 +41,7 @@ describe('MovieStateService', () => {
 
   it('should set movies', (done) => {
     const movies = [mockMovie];
-    
+
     service.movies$.subscribe((state) => {
       if (state.movies.length > 0) {
         expect(state.movies).toEqual(movies);
@@ -55,7 +55,7 @@ describe('MovieStateService', () => {
   it('should set genres', () => {
     const genres = [mockGenre];
     service.setGenres(genres);
-    
+
     const state = service.getState();
     expect(state.genres).toEqual(genres);
   });
@@ -71,23 +71,23 @@ describe('MovieStateService', () => {
   it('should set error message', () => {
     const errorMessage = 'Test error';
     service.setError(errorMessage);
-    
+
     expect(service.getState().error).toBe(errorMessage);
   });
 
   it('should clear error message', () => {
     service.setError('Test error');
     service.setError(null);
-    
+
     expect(service.getState().error).toBeNull();
   });
 
   it('should set pagination', () => {
     const page = 2;
     const totalPages = 10;
-    
+
     service.setPagination(page, totalPages);
-    
+
     const state = service.getState();
     expect(state.page).toBe(page);
     expect(state.totalPages).toBe(totalPages);
@@ -95,23 +95,23 @@ describe('MovieStateService', () => {
 
   it('should set filters', () => {
     const filters = { genreId: 28, year: 2023 };
-    
+
     service.setFilters(filters);
-    
+
     expect(service.getState().filters).toEqual(filters);
   });
 
   it('should set sort by', () => {
     const sortBy = 'vote_average.desc' as const;
-    
+
     service.setSortBy(sortBy);
-    
+
     expect(service.getState().sortBy).toBe(sortBy);
   });
 
   it('should update state partially', () => {
     service.setState({ loading: true, error: 'Test error' });
-    
+
     const state = service.getState();
     expect(state.loading).toBe(true);
     expect(state.error).toBe('Test error');
@@ -120,7 +120,7 @@ describe('MovieStateService', () => {
 
   it('should emit state changes through observable', (done) => {
     let emissionCount = 0;
-    
+
     service.movies$.subscribe(() => {
       emissionCount++;
       if (emissionCount === 2) {

@@ -9,6 +9,15 @@ module.exports = {
     '!src/main.ts',
     '!src/environments/**',
   ],
+  coverageThreshold: {
+    global: {
+      branches: 60,
+      functions: 70,
+      lines: 70,
+      statements: 70,
+    },
+  },
+  coverageReporters: ['text', 'lcov', 'html', 'json-summary'],
   moduleNameMapper: {
     '^@app/(.*)$': '<rootDir>/src/app/$1',
     '^@environments/(.*)$': '<rootDir>/src/environments/$1',

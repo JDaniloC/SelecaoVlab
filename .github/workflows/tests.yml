@@ -9,27 +9,27 @@ on:
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [18.x, 20.x]
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-      
+
       - name: Run unit tests
         run: npm run test:coverage
-      
+
       - name: Upload coverage to Codecov
         if: matrix.node-version == '20.x'
         uses: codecov/codecov-action@v4
@@ -41,29 +41,29 @@ jobs:
 
   e2e-tests:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-      
+
       - name: Create .env file
         run: |
           echo "NG_APP_API_KEY=${{ secrets.TMDB_API_KEY }}" > .env
-      
+
       - name: Run E2E tests
         run: npm run e2e:ci
         env:
           NG_APP_API_KEY: ${{ secrets.TMDB_API_KEY }}
-      
+
       - name: Upload Cypress screenshots
         if: failure()
         uses: actions/upload-artifact@v4
@@ -71,7 +71,7 @@ jobs:
           name: cypress-screenshots
           path: cypress/screenshots
           if-no-files-found: ignore
-      
+
       - name: Upload Cypress videos
         if: always()
         uses: actions/upload-artifact@v4
