@@ -38,7 +38,7 @@ describe('Movie List Page - E2E Tests', () => {
       }).as('getMovies');
 
       cy.visit('/');
-      
+
       // Eventually movies should load or show empty state
       cy.get('body', { timeout: 10000 }).should('exist');
     });
@@ -48,7 +48,7 @@ describe('Movie List Page - E2E Tests', () => {
     it('should allow searching for movies by name', () => {
       // Find the search input - try multiple selectors
       const searchInput = 'input[type="search"], input[placeholder*="search" i], input[placeholder*="buscar" i], input[name*="search" i], input[name="name"]';
-      
+
       cy.get(searchInput, { timeout: 5000 })
         .first()
         .should('be.visible')
@@ -63,7 +63,7 @@ describe('Movie List Page - E2E Tests', () => {
 
     it('should clear search and show all movies', () => {
       const searchInput = 'input[type="search"], input[placeholder*="search" i], input[placeholder*="buscar" i]';
-      
+
       cy.get(searchInput, { timeout: 5000 })
         .first()
         .type('Matrix')
@@ -79,7 +79,7 @@ describe('Movie List Page - E2E Tests', () => {
     it('should filter movies by genre', () => {
       // Wait for filters to be available
       cy.get('app-movie-filters', { timeout: 5000 }).should('exist');
-      
+
       // Try to find and interact with genre filter
       cy.get('select[name*="genre" i], select[id*="genre" i], [class*="genre"]').first().then(($select) => {
         if ($select.is('select')) {
@@ -92,7 +92,7 @@ describe('Movie List Page - E2E Tests', () => {
 
     it('should filter movies by year', () => {
       cy.get('app-movie-filters').should('exist');
-      
+
       // Try to find year filter
       cy.get('input[name*="year" i], input[type="number"], select[name*="year" i]').first().then(($input) => {
         if ($input.is('input[type="number"]')) {
@@ -108,7 +108,7 @@ describe('Movie List Page - E2E Tests', () => {
     it('should display no results message when filters return no movies', () => {
       // This test assumes a specific filter combination that returns no results
       const searchInput = 'input[type="search"], input[name="name"]';
-      
+
       cy.get(searchInput, { timeout: 5000 })
         .first()
         .type('xyzabc123nonexistent')
@@ -121,7 +121,7 @@ describe('Movie List Page - E2E Tests', () => {
   describe('Movie Sorting', () => {
     it('should sort movies by rating', () => {
       cy.get('app-movie-sort, [class*="sort"]', { timeout: 5000 }).should('exist');
-      
+
       cy.get('select[name*="sort" i], select[id*="sort" i]').first().then(($select) => {
         if ($select.length) {
           cy.wrap($select).select('vote_average.desc');
@@ -226,7 +226,7 @@ describe('Movie List Page - E2E Tests', () => {
     it('should display marathon movies in the marathon section', () => {
       // Add a movie
       cy.get('app-movie-card').first().as('firstMovie');
-      
+
       cy.get('@firstMovie').find('h3, h2, .movie-title').invoke('text').then((title) => {
         cy.get('@firstMovie').within(() => {
           cy.get('button[class*="add"]').click();
@@ -285,7 +285,7 @@ describe('Movie List Page - E2E Tests', () => {
       });
 
       cy.visit('/');
-      
+
       // Should eventually show some error or fallback state
       // (depending on implementation)
       cy.get('body', { timeout: 35000 }).should('exist');
@@ -303,7 +303,7 @@ describe('Movie List Page - E2E Tests', () => {
       it(`should display correctly on ${name}`, () => {
         cy.viewport(width, height);
         cy.visit('/');
-        
+
         cy.get('app-movie-list').should('be.visible');
         cy.get('app-movie-card', { timeout: 10000 }).should('have.length.greaterThan', 0);
       });
