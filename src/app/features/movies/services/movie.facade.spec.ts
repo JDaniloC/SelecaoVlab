@@ -34,6 +34,8 @@ describe('MovieFacade', () => {
       discoverMovies: jest.fn(),
       getGenres: jest.fn(),
       getMovieDetails: jest.fn(),
+      searchPerson: jest.fn(),
+      getPersonMovieCredits: jest.fn(),
     };
 
     const stateServiceMock = {
@@ -44,10 +46,11 @@ describe('MovieFacade', () => {
       setFilters: jest.fn(),
       setSortBy: jest.fn(),
       setGenres: jest.fn(),
+       setSelectedPerson: jest.fn(),
       addToMarathon: jest.fn(),
       removeFromMarathon: jest.fn(),
       clearMarathon: jest.fn(),
-      getState: jest.fn().mockReturnValue({ 
+      getState: jest.fn().mockReturnValue({
         filters: {},
         marathonMovies: []
       }),
@@ -60,7 +63,8 @@ describe('MovieFacade', () => {
         totalPages: 1,
         filters: {},
         sortBy: null,
-        marathonMovies: []
+        marathonMovies: [],
+        selectedPerson: null,
       }),
     };
 
@@ -90,6 +94,8 @@ describe('MovieFacade', () => {
 
       setTimeout(() => {
         expect(stateService.setLoading).toHaveBeenCalledWith(true);
+        expect(stateService.setSelectedPerson).toHaveBeenCalledWith(null);
+        expect(stateService.setError).toHaveBeenCalledWith(null);
         expect(apiService.getPopularMovies).toHaveBeenCalledWith(1);
         expect(apiService.getMovieDetails).toHaveBeenCalledWith(1);
         expect(stateService.setMovies).toHaveBeenCalledWith([mockMovie]);
@@ -107,6 +113,7 @@ describe('MovieFacade', () => {
 
       setTimeout(() => {
         expect(stateService.setError).toHaveBeenCalledWith('Failed to load popular movies.');
+        expect(stateService.setSelectedPerson).toHaveBeenCalledWith(null);
         expect(stateService.setLoading).toHaveBeenCalledWith(false);
         done();
       }, 100);
@@ -135,6 +142,8 @@ describe('MovieFacade', () => {
 
       setTimeout(() => {
         expect(stateService.setLoading).toHaveBeenCalledWith(true);
+        expect(stateService.setSelectedPerson).toHaveBeenCalledWith(null);
+        expect(stateService.setError).toHaveBeenCalledWith(null);
         expect(apiService.searchMovies).toHaveBeenCalledWith(query, 1);
         expect(stateService.setMovies).toHaveBeenCalledWith([mockMovie]);
         expect(stateService.setLoading).toHaveBeenCalledWith(false);
@@ -150,6 +159,7 @@ describe('MovieFacade', () => {
 
       setTimeout(() => {
         expect(stateService.setError).toHaveBeenCalledWith('Failed to search movies.');
+        expect(stateService.setSelectedPerson).toHaveBeenCalledWith(null);
         expect(stateService.setLoading).toHaveBeenCalledWith(false);
         done();
       }, 100);
@@ -193,6 +203,8 @@ describe('MovieFacade', () => {
 
       setTimeout(() => {
         expect(stateService.setFilters).toHaveBeenCalledWith(filters);
+        expect(stateService.setSelectedPerson).toHaveBeenCalledWith(null);
+        expect(stateService.setError).toHaveBeenCalledWith(null);
         expect(apiService.discoverMovies).toHaveBeenCalledWith(filters, undefined, 1);
         done();
       }, 100);
@@ -206,6 +218,7 @@ describe('MovieFacade', () => {
       facade.filterMovies(filters);
 
       setTimeout(() => {
+        expect(stateService.setSelectedPerson).toHaveBeenCalledWith(null);
         expect(apiService.searchMovies).toHaveBeenCalledWith('Matrix', 1);
         done();
       }, 100);
@@ -221,9 +234,118 @@ describe('MovieFacade', () => {
 
       setTimeout(() => {
         expect(stateService.setSortBy).toHaveBeenCalledWith(sortBy);
+        expect(stateService.setSelectedPerson).toHaveBeenCalledWith(null);
         expect(apiService.discoverMovies).toHaveBeenCalledWith(filters, sortBy, 1);
         done();
       }, 100);
+    });
+  });
+
+  describe('searchFilmography', () => {
+    it('should fetch and store filmography for a person', (done) => {
+      const personName = 'Christopher Nolan';
+      const person = { id: 42, name: personName };
+      const credits = {
+        cast: [{ id: mockMovie.id, title: mockMovie.title }],
+        crew: []
+      };
+
+      apiService.searchPerson.mockReturnValue(of({
+        page: 1,
+        results: [person],
+        total_pages: 1,
+        total_results: 1,
+      }));
+      apiService.getPersonMovieCredits.mockReturnValue(of(credits));
+      apiService.getMovieDetails.mockReturnValue(of(mockMovie));
+
+      facade.searchFilmography(personName);
+
+      setTimeout(() => {
+        expect(stateService.setLoading).toHaveBeenCalledWith(true);
+        expect(apiService.searchPerson).toHaveBeenCalledWith(personName.trim());
+        expect(apiService.getPersonMovieCredits).toHaveBeenCalledWith(person.id);
+        expect(stateService.setFilters).toHaveBeenCalledWith({});
+        expect(stateService.setSortBy).toHaveBeenCalledWith(null);
+        expect(stateService.setSelectedPerson).toHaveBeenCalledWith(person);
+        expect(stateService.setMovies).toHaveBeenCalledWith([mockMovie]);
+        expect(stateService.setPagination).toHaveBeenCalledWith(1, 1);
+        expect(stateService.setError).toHaveBeenCalledWith(null);
+        expect(stateService.setLoading).toHaveBeenCalledWith(false);
+        done();
+      }, 100);
+    });
+
+    it('should handle when person is not found', (done) => {
+      apiService.searchPerson.mockReturnValue(of({
+        page: 1,
+        results: [],
+        total_pages: 0,
+        total_results: 0,
+      }));
+
+      facade.searchFilmography('Unknown Person');
+
+      setTimeout(() => {
+        expect(stateService.setSelectedPerson).toHaveBeenCalledWith(null);
+        expect(stateService.setMovies).toHaveBeenCalledWith([]);
+        expect(stateService.setPagination).toHaveBeenCalledWith(1, 1);
+        expect(stateService.setError).toHaveBeenCalledWith('Nenhum profissional encontrado para o nome informado.');
+        expect(stateService.setLoading).toHaveBeenCalledWith(false);
+        done();
+      }, 100);
+    });
+
+    it('should handle when person has no movie credits', (done) => {
+      const person = { id: 11, name: 'Empty Filmography' };
+
+      apiService.searchPerson.mockReturnValue(of({
+        page: 1,
+        results: [person],
+        total_pages: 1,
+        total_results: 1,
+      }));
+      apiService.getPersonMovieCredits.mockReturnValue(of({ cast: [], crew: [] }));
+
+      facade.searchFilmography(person.name);
+
+      setTimeout(() => {
+        expect(stateService.setSelectedPerson).toHaveBeenCalledWith(person);
+        expect(stateService.setMovies).toHaveBeenCalledWith([]);
+        expect(stateService.setPagination).toHaveBeenCalledWith(1, 1);
+        expect(stateService.setError).toHaveBeenCalledWith(`Nenhum filme encontrado para ${person.name}.`);
+        expect(stateService.setLoading).toHaveBeenCalledWith(false);
+        done();
+      }, 100);
+    });
+
+    it('should handle errors while fetching filmography', (done) => {
+      apiService.searchPerson.mockReturnValue(throwError(() => new Error('API error')));
+
+      facade.searchFilmography('Any Person');
+
+      setTimeout(() => {
+        expect(stateService.setSelectedPerson).toHaveBeenCalledWith(null);
+        expect(stateService.setError).toHaveBeenCalledWith('Não foi possível carregar a filmografia.');
+        expect(stateService.setLoading).toHaveBeenCalledWith(false);
+        done();
+      }, 100);
+    });
+  });
+
+  describe('clearFilmography', () => {
+    it('should reset filmography state and reload popular movies', () => {
+      const loadSpy = jest.spyOn(facade, 'loadPopularMovies').mockImplementation(() => {});
+
+      facade.clearFilmography();
+
+      expect(stateService.setSelectedPerson).toHaveBeenCalledWith(null);
+      expect(stateService.setFilters).toHaveBeenCalledWith({});
+      expect(stateService.setSortBy).toHaveBeenCalledWith(null);
+      expect(stateService.setError).toHaveBeenCalledWith(null);
+      expect(loadSpy).toHaveBeenCalled();
+
+      loadSpy.mockRestore();
     });
   });
 

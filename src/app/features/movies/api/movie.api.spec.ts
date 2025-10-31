@@ -93,6 +93,40 @@ describe('MovieApiService', () => {
     });
   });
 
+  describe('searchPerson', () => {
+    it('should search for a person by name', () => {
+      const query = 'Christopher Nolan';
+      const dummyResponse = {
+        page: 1,
+        results: [{ id: 525, name: 'Christopher Nolan' }],
+        total_pages: 1,
+        total_results: 1,
+      };
+
+      service.searchPerson(query).subscribe((response) => {
+        expect(response).toEqual(dummyResponse);
+      });
+
+      const req = httpMock.expectOne((request) =>
+        request.url.includes('/search/person') && request.url.includes('query=Christopher')
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(dummyResponse);
+    });
+
+    it('should search person with pagination', () => {
+      const query = 'Tom Hanks';
+      const page = 2;
+
+      service.searchPerson(query, page).subscribe();
+
+      const req = httpMock.expectOne((request) =>
+        request.url.includes('query=Tom') && request.url.includes('page=2')
+      );
+      req.flush({ page, results: [], total_pages: 3, total_results: 60 });
+    });
+  });
+
   describe('discoverMovies', () => {
     it('should discover movies with filters', () => {
       const filters: MovieFilters = {
@@ -166,6 +200,26 @@ describe('MovieApiService', () => {
       );
       expect(req.request.method).toBe('GET');
       req.flush(mockMovie);
+    });
+  });
+
+  describe('getPersonMovieCredits', () => {
+    it('should fetch movie credits for a person', () => {
+      const personId = 31;
+      const mockCredits = {
+        cast: [{ id: 1, title: 'Movie Cast' }],
+        crew: [{ id: 2, title: 'Movie Crew' }],
+      };
+
+      service.getPersonMovieCredits(personId).subscribe((response) => {
+        expect(response).toEqual(mockCredits);
+      });
+
+      const req = httpMock.expectOne((request) =>
+        request.url.includes(`/person/${personId}/movie_credits`)
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockCredits);
     });
   });
 });

@@ -1,9 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { render, screen, fireEvent } from '@testing-library/angular';
+import { render, screen } from '@testing-library/angular';
 import { MovieListComponent } from './movie-list.component';
 import { MovieFacade } from '../../services/movie.facade';
 import { of, BehaviorSubject } from 'rxjs';
-import { Movie, Genre, MovieFilters, SortBy } from '../../types/movie.type';
+import { Movie, Genre, MovieFilters, SortBy, Person } from '../../types/movie.type';
 
 describe('MovieListComponent', () => {
   const mockMovies: Movie[] = [
@@ -44,6 +43,7 @@ describe('MovieListComponent', () => {
     totalPages: number;
     filters: MovieFilters;
     sortBy: SortBy | null;
+    selectedPerson: Person | null;
   }>({
     movies: mockMovies,
     genres: mockGenres,
@@ -53,6 +53,7 @@ describe('MovieListComponent', () => {
     totalPages: 1,
     filters: {},
     sortBy: null,
+    selectedPerson: null,
   });
 
   const mockFacade = {
@@ -62,6 +63,8 @@ describe('MovieListComponent', () => {
     filterMovies: jest.fn(),
     sortMovies: jest.fn(),
     searchMovies: jest.fn(),
+    searchFilmography: jest.fn(),
+    clearFilmography: jest.fn(),
     isInMarathon: jest.fn().mockReturnValue(false),
     addToMarathon: jest.fn(),
     removeFromMarathon: jest.fn(),
@@ -78,7 +81,11 @@ describe('MovieListComponent', () => {
       totalPages: 1,
       filters: {},
       sortBy: null,
+      selectedPerson: null,
     });
+
+    mockFacade.searchFilmography.mockClear();
+    mockFacade.clearFilmography.mockClear();
   });
 
   it('should create the component', async () => {
@@ -125,6 +132,7 @@ describe('MovieListComponent', () => {
       totalPages: 1,
       filters: {},
       sortBy: null,
+      selectedPerson: null,
     });
 
     await render(MovieListComponent, {
@@ -145,6 +153,7 @@ describe('MovieListComponent', () => {
       totalPages: 1,
       filters: {},
       sortBy: null,
+      selectedPerson: null,
     });
 
     await render(MovieListComponent, {
@@ -164,6 +173,7 @@ describe('MovieListComponent', () => {
       totalPages: 1,
       filters: {},
       sortBy: null,
+      selectedPerson: null,
     });
 
     await render(MovieListComponent, {
@@ -227,6 +237,78 @@ describe('MovieListComponent', () => {
     });
 
     expect(screen.getByText('🎬 Lista de Maratona')).toBeTruthy();
+  });
+
+  it('should display filmography context when a person is selected', async () => {
+    const selectedPerson: Person = { id: 99, name: 'Christopher Nolan' };
+    mockState$.next({
+      movies: mockMovies,
+      genres: mockGenres,
+      loading: false,
+      error: null,
+      page: 1,
+      totalPages: 1,
+      filters: {},
+      sortBy: null,
+      selectedPerson,
+    });
+
+    await render(MovieListComponent, {
+      providers: [{ provide: MovieFacade, useValue: mockFacade }],
+    });
+
+    expect(screen.getByText(/2 filmes encontrados na filmografia de/i)).toBeTruthy();
+    expect(screen.getByRole('button', { name: /limpar/i })).toBeTruthy();
+  });
+
+  it('should show dedicated empty state message for filmography', async () => {
+    const selectedPerson: Person = { id: 100, name: 'Hans Zimmer' };
+    mockState$.next({
+      movies: [],
+      genres: mockGenres,
+      loading: false,
+      error: null,
+      page: 1,
+      totalPages: 1,
+      filters: {},
+      sortBy: null,
+      selectedPerson,
+    });
+
+    await render(MovieListComponent, {
+      providers: [{ provide: MovieFacade, useValue: mockFacade }],
+    });
+
+    expect(
+      screen.getByText('Nenhum filme encontrado na filmografia de Hans Zimmer.')
+    ).toBeTruthy();
+  });
+
+  it('should delegate filmography search to facade', async () => {
+    const { fixture } = await render(MovieListComponent, {
+      providers: [{ provide: MovieFacade, useValue: mockFacade }],
+    });
+
+    const component = fixture.componentInstance;
+    component.onFilmographySearch('Quentin Tarantino');
+
+    expect(mockFacade.searchFilmography).toHaveBeenCalledWith('Quentin Tarantino');
+  });
+
+  it('should clear filmography and reset local filters', async () => {
+    const { fixture } = await render(MovieListComponent, {
+      providers: [{ provide: MovieFacade, useValue: mockFacade }],
+    });
+
+    const component = fixture.componentInstance;
+    component.currentFilters = { genreId: 1 };
+    component.currentSort = 'vote_average.desc';
+
+    component.onFilmographyClear();
+
+    expect(mockFacade.clearFilmography).toHaveBeenCalled();
+    expect(component.currentFilters).toEqual({});
+    expect(component.currentSort).toBeNull();
   });
 
   // TODO: Testes futuros para funcionalidade de maratona (quando implementada)

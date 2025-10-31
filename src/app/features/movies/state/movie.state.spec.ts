@@ -37,6 +37,7 @@ describe('MovieStateService', () => {
     expect(state.totalPages).toBe(1);
     expect(state.filters).toEqual({});
     expect(state.sortBy).toBeNull();
+  expect(state.selectedPerson).toBeNull();
   });
 
   it('should set movies', (done) => {
@@ -109,6 +110,14 @@ describe('MovieStateService', () => {
     expect(service.getState().sortBy).toBe(sortBy);
   });
 
+  it('should set selected person', () => {
+    const person = { id: 1, name: 'John Doe' };
+
+    service.setSelectedPerson(person);
+
+    expect(service.getState().selectedPerson).toEqual(person);
+  });
+
   it('should update state partially', () => {
     service.setState({ loading: true, error: 'Test error' });
 
@@ -162,7 +171,7 @@ describe('MovieStateService', () => {
 
     it('should add movie to marathon', () => {
       service.addToMarathon(mockMovie1);
-      
+
       const state = service.getState();
       expect(state.marathonMovies).toHaveLength(1);
       expect(state.marathonMovies[0]).toEqual(mockMovie1);
@@ -171,7 +180,7 @@ describe('MovieStateService', () => {
     it('should not add duplicate movies to marathon', () => {
       service.addToMarathon(mockMovie1);
       service.addToMarathon(mockMovie1);
-      
+
       const state = service.getState();
       expect(state.marathonMovies).toHaveLength(1);
     });
@@ -179,7 +188,7 @@ describe('MovieStateService', () => {
     it('should add multiple different movies to marathon', () => {
       service.addToMarathon(mockMovie1);
       service.addToMarathon(mockMovie2);
-      
+
       const state = service.getState();
       expect(state.marathonMovies).toHaveLength(2);
       expect(state.marathonMovies[0]).toEqual(mockMovie1);
@@ -190,7 +199,7 @@ describe('MovieStateService', () => {
       service.addToMarathon(mockMovie1);
       service.addToMarathon(mockMovie2);
       service.removeFromMarathon(mockMovie1.id);
-      
+
       const state = service.getState();
       expect(state.marathonMovies).toHaveLength(1);
       expect(state.marathonMovies[0]).toEqual(mockMovie2);
@@ -199,7 +208,7 @@ describe('MovieStateService', () => {
     it('should handle removing non-existent movie', () => {
       service.addToMarathon(mockMovie1);
       service.removeFromMarathon(999);
-      
+
       const state = service.getState();
       expect(state.marathonMovies).toHaveLength(1);
       expect(state.marathonMovies[0]).toEqual(mockMovie1);
@@ -209,7 +218,7 @@ describe('MovieStateService', () => {
       service.addToMarathon(mockMovie1);
       service.addToMarathon(mockMovie2);
       service.clearMarathon();
-      
+
       const state = service.getState();
       expect(state.marathonMovies).toEqual([]);
     });
@@ -217,7 +226,7 @@ describe('MovieStateService', () => {
     it('should calculate marathon duration correctly', () => {
       service.addToMarathon(mockMovie1); // 120 minutes
       service.addToMarathon(mockMovie2); // 95 minutes
-      
+
       const duration = service.getMarathonDuration();
       expect(duration.hours).toBe(3); // 215 minutes = 3 hours
       expect(duration.minutes).toBe(35); // 35 remaining minutes
@@ -234,10 +243,10 @@ describe('MovieStateService', () => {
         ...mockMovie1,
         runtime: undefined
       };
-      
+
       service.addToMarathon(movieWithoutRuntime);
       const duration = service.getMarathonDuration();
-      
+
       expect(duration.hours).toBe(0);
       expect(duration.minutes).toBe(0);
     });
@@ -247,10 +256,10 @@ describe('MovieStateService', () => {
         ...mockMovie1,
         runtime: undefined
       };
-      
+
       service.addToMarathon(movieWithoutRuntime);
       service.addToMarathon(mockMovie2); // 95 minutes
-      
+
       const duration = service.getMarathonDuration();
       expect(duration.hours).toBe(1);
       expect(duration.minutes).toBe(35);
