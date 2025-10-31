@@ -17,6 +17,9 @@
 
     <div class="marathon-movies" *ngIf="movies.length > 0">
       <div class="marathon-actions">
+        <button class="save-btn" (click)="openSaveDialog()">
+          💾 Salvar Maratona
+        </button>
         <button class="clear-btn" (click)="clearMarathon()">
           Limpar Lista
         </button>
@@ -43,5 +46,28 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Save Marathon Dialog -->
+<div class="modal-overlay" *ngIf="showSaveDialog" (click)="closeSaveDialog()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Salvar Maratona</h3>
+    <p>Digite um nome para sua maratona:</p>
+    <input 
+      type="text" 
+      [(ngModel)]="marathonName" 
+      placeholder="Ex: Maratona do Oscar 2024"
+      class="marathon-name-input"
+      (keyup.enter)="saveMarathon()"
+    />
+    <div class="modal-actions">
+      <button class="cancel-btn" (click)="closeSaveDialog()">Cancelar</button>
+      <button class="confirm-btn" (click)="saveMarathon()" [disabled]="!marathonName.trim()">
+        Salvar
+      </button>
+    </div>
+    <p class="error-message" *ngIf="saveError">{{ saveError }}</p>
+    <p class="success-message" *ngIf="saveSuccess">{{ saveSuccess }}</p>
   </div>
 </div>

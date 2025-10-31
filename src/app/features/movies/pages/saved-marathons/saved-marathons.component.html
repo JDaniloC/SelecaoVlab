@@ -1,0 +1,51 @@
+<div class="saved-marathons-container">
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">
+      ← Voltar
+    </button>
+    <h1>🎬 Maratonas Salvas</h1>
+  </div>
+
+  <div class="marathons-list" *ngIf="savedMarathons.length > 0">
+    <div class="marathon-card" *ngFor="let marathon of savedMarathons" (click)="loadMarathon(marathon)">
+      <div class="marathon-info">
+        <h2 class="marathon-name">{{ marathon.name }}</h2>
+        <div class="marathon-details">
+          <span class="detail-item">
+            📅 {{ formatDate(marathon.createdAt) }}
+          </span>
+          <span class="detail-item">
+            🎬 {{ marathon.movies.length }} filme{{ marathon.movies.length !== 1 ? 's' : '' }}
+          </span>
+          <span class="detail-item">
+            ⏱️ {{ formatDuration(marathon.totalDuration) }}
+          </span>
+        </div>
+        <div class="marathon-movies-preview">
+          <div class="movie-poster-preview" *ngFor="let movie of marathon.movies.slice(0, 4)">
+            <img 
+              [src]="'https://image.tmdb.org/t/p/w92' + movie.poster_path" 
+              [alt]="movie.title"
+            />
+          </div>
+          <div class="more-movies" *ngIf="marathon.movies.length > 4">
+            +{{ marathon.movies.length - 4 }}
+          </div>
+        </div>
+      </div>
+      <button class="delete-btn" (click)="deleteMarathon(marathon, $event)">
+        🗑️
+      </button>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="savedMarathons.length === 0">
+    <p class="empty-icon">📽️</p>
+    <h2>Nenhuma maratona salva</h2>
+    <p>Você ainda não salvou nenhuma maratona.</p>
+    <p class="hint">Crie uma lista de filmes e clique em "Salvar Maratona" para começar!</p>
+    <button class="primary-btn" (click)="goBack()">
+      Criar Maratona
+    </button>
+  </div>
+</div>
