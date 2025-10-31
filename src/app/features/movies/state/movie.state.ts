@@ -11,6 +11,7 @@ export interface MovieState {
   totalPages: number;
   filters: MovieFilters;
   sortBy: SortBy | null;
+  marathonMovies: Movie[];
   _internal?: unknown;
 }
 
@@ -23,6 +24,7 @@ const initialState: MovieState = {
   totalPages: 1,
   filters: {},
   sortBy: null,
+  marathonMovies: [],
   _internal: undefined
 };
 
@@ -68,5 +70,34 @@ export class MovieStateService {
 
   setSortBy(sortBy: SortBy | null) {
     this.setState({ sortBy });
+  }
+
+  addToMarathon(movie: Movie) {
+    const currentMarathon = this.getState().marathonMovies;
+    if (!currentMarathon.find(m => m.id === movie.id)) {
+      this.setState({ marathonMovies: [...currentMarathon, movie] });
+    }
+  }
+
+  removeFromMarathon(movieId: number) {
+    const currentMarathon = this.getState().marathonMovies;
+    this.setState({
+      marathonMovies: currentMarathon.filter(m => m.id !== movieId)
+    });
+  }
+
+  clearMarathon() {
+    this.setState({ marathonMovies: [] });
+  }
+
+  getMarathonDuration(): { hours: number; minutes: number } {
+    const totalMinutes = this.getState().marathonMovies.reduce(
+      (sum, movie) => sum + (movie.runtime || 0),
+      0
+    );
+    return {
+      hours: Math.floor(totalMinutes / 60),
+      minutes: totalMinutes % 60
+    };
   }
 }
