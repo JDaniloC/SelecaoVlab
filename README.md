@@ -2,6 +2,35 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.0.
 
+## Setup
+
+### Prerequisites
+
+- Node.js (LTS version recommended)
+- npm or yarn package manager
+- TMDB API Key (The Movie Database)
+
+### Environment Configuration
+
+1. Copy the `.env.example` file to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Get your TMDB API key:
+   - Create an account at [The Movie Database](https://www.themoviedb.org/)
+   - Navigate to [API Settings](https://www.themoviedb.org/settings/api)
+   - Copy your API key
+
+3. Update the `.env` file with your API key:
+   ```
+   NG_APP_API_KEY=your_actual_api_key_here
+   ```
+
+### Installation
+
+Run `npm install` to install all dependencies.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
@@ -25,3 +54,13 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Bug Fixes
+
+This project has been updated with the following bug fixes:
+
+1. **Fixed missing imports**: Added missing `HttpClient`, `Input`, `Component`, `AfterViewInit`, and `RouterModule` imports
+2. **Fixed API service typos**: Corrected `http.gt` to `http.get` in movie API service
+3. **Fixed template bindings**: Changed `[titles]` to `[title]` in carousel component usage
+4. **Fixed font imports**: Removed external font URL that caused build failures
+5. **Added environment configuration**: Created `.env.example` and documented API key setup
