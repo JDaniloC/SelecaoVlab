@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { MovieApiService } from '../api/movie.api';
 import { MovieStateService } from '../state/movie.state';
+import { MarathonStorageService } from './marathon-storage.service';
 import { tap, catchError, switchMap, map, finalize } from 'rxjs/operators';
 import { of, forkJoin, Observable } from 'rxjs';
-import { MovieFilters, SortBy, Movie, MovieResponse, PersonMovieCredit, PersonMovieCreditsResponse } from '../types/movie.type';
+import { MovieFilters, SortBy, Movie, MovieResponse, PersonMovieCredit, PersonMovieCreditsResponse, SavedMarathon } from '../types/movie.type';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ import { MovieFilters, SortBy, Movie, MovieResponse, PersonMovieCredit, PersonMo
 export class MovieFacade {
   private api = inject(MovieApiService);
   private state = inject(MovieStateService);
+  private marathonStorage = inject(MarathonStorageService);
   private readonly MAX_FILMOGRAPHY_RESULTS = 20;
 
   movies$ = this.state.movies$;
@@ -204,6 +206,26 @@ export class MovieFacade {
 
   isInMarathon(movieId: number): boolean {
     return this.state.getState().marathonMovies.some(m => m.id === movieId);
+  }
+
+  saveMarathon(name: string): SavedMarathon {
+    const currentMovies = this.state.getState().marathonMovies;
+    if (currentMovies.length === 0) {
+      throw new Error('Cannot save an empty marathon');
+    }
+    return this.marathonStorage.saveMarathon(name, currentMovies);
+  }
+
+  getSavedMarathons(): SavedMarathon[] {
+    return this.marathonStorage.getSavedMarathons();
+  }
+
+  loadMarathon(marathon: SavedMarathon): void {
+    this.state.setState({ marathonMovies: marathon.movies });
+  }
+
+  deleteMarathon(id: string): void {
+    this.marathonStorage.deleteMarathon(id);
   }
 
   private mergePersonCredits(credits: PersonMovieCreditsResponse): PersonMovieCredit[] {

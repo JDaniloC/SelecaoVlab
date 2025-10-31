@@ -1,7 +1,12 @@
 <div class="movie-list-container">
   <div class="header">
-    <h1>Buscar Filmes</h1>
-    <p>Encontre filmes para adicionar à sua maratona</p>
+    <div>
+      <h1>Buscar Filmes</h1>
+      <p>Encontre filmes para adicionar à sua maratona</p>
+    </div>
+    <button class="saved-marathons-btn" (click)="goToSavedMarathons()">
+      📁 Maratonas Salvas
+    </button>
   </div>
 
   <app-filmography-search

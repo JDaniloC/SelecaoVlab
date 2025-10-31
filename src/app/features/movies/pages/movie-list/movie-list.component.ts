@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { MovieFacade } from '../../services/movie.facade';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { MovieCardComponent } from '../../components/movie-card/movie-card.component';
@@ -18,6 +19,7 @@ import { map } from 'rxjs/operators';
 })
 export class MovieListComponent implements OnInit {
   facade = inject(MovieFacade);
+  private router = inject(Router);
 
   movies$ = this.facade.movies$.pipe(
     map(state => state.movies)
@@ -65,5 +67,9 @@ export class MovieListComponent implements OnInit {
     this.currentFilters = {};
     this.currentSort = null;
     this.facade.clearFilmography();
+  }
+
+  goToSavedMarathons() {
+    this.router.navigate(['/movies/saved-marathons']);
   }
 }

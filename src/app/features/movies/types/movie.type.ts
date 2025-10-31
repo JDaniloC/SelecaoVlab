@@ -67,3 +67,11 @@ export interface PersonMovieCreditsResponse {
   cast: PersonMovieCredit[];
   crew: PersonMovieCredit[];
 }
+
+export interface SavedMarathon {
+  id: string;
+  name: string;
+  movies: Movie[];
+  createdAt: Date;
+  totalDuration: number; // in minutes
+}
