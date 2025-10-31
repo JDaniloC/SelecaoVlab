@@ -1,0 +1,47 @@
+<div class="marathon-container">
+  <div class="marathon-header">
+    <h2>🎬 Lista de Maratona</h2>
+    <div class="marathon-duration" *ngIf="marathonDuration$ | async as duration">
+      <span class="duration-label">Duração Total:</span>
+      <span class="duration-value">
+        {{ duration.hours }}h {{ duration.minutes }}min
+      </span>
+    </div>
+  </div>
+
+  <div class="marathon-content" *ngIf="marathonMovies$ | async as movies">
+    <div class="empty-state" *ngIf="movies.length === 0">
+      <p>Nenhum filme adicionado à maratona.</p>
+      <p class="hint">Adicione filmes usando o botão + nos cards de filme.</p>
+    </div>
+
+    <div class="marathon-movies" *ngIf="movies.length > 0">
+      <div class="marathon-actions">
+        <button class="clear-btn" (click)="clearMarathon()">
+          Limpar Lista
+        </button>
+      </div>
+
+      <div class="movie-list">
+        <div class="movie-item" *ngFor="let movie of movies">
+          <img 
+            [src]="getImageUrl(movie.poster_path)" 
+            [alt]="movie.title"
+            class="movie-poster"
+          />
+          <div class="movie-info">
+            <h3 class="movie-title">{{ movie.title }}</h3>
+            <p class="movie-runtime">{{ formatRuntime(movie.runtime) }}</p>
+          </div>
+          <button 
+            class="remove-btn" 
+            (click)="removeFromMarathon(movie.id)"
+            aria-label="Remover da maratona"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
